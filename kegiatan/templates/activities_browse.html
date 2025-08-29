@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelajahi Kegiatan Event</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Font Awesome untuk ikon orang -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Jelajahi Kegiatan Event</h1>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Kembali ke Dashboard</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <p class="text-center">Halo, <strong>{{ session.get('user_name', 'Tamu') }}</strong>! Pilih kegiatan yang Anda minati:</p>
+
+        <div class="activity-grid">
+            {% for activity_name, activity_data in activities.items() %}
+            <div class="activity-card">
+                <img src="{{ activity_data.image }}" alt="Foto Kegiatan {{ activity_name }}" class="activity-card-image">
+                <div class="activity-card-content">
+                    <h3>{{ activity_name }}</h3>
+                    <p>{{ activity_data.description }}</p>
+                    <div class="activity-card-info">
+                        <p><strong>Hari & Jam:</strong> {{ activity_data.day_time }}</p>
+                    </div>
+                </div>
+                <div class="activity-card-footer">
+                    <div class="participant-count">
+                        <i class="fas fa-users"></i>
+                        <span>{{ activity_data.participant_count }} Peserta</span>
+                    </div>
+                    <form action="{{ url_for('register_event', activity_name=activity_name) }}" method="get">
+                        <button type="submit" class="btn">Daftar</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,338 @@
+/* static/css/style.css - Desain Modern, Lebih Terang untuk Anak Muda */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #60A5FA; /* Biru cerah, lebih terang dari sebelumnya */
+    --secondary-color: #34D399; /* Hijau tosca cerah */
+    --accent-color: #FBBF24; /* Oranye cerah */
+    --text-dark: #2D3748; /* Teks sedikit lebih gelap untuk kontras */
+    --text-light: #ffffff;
+    --bg-light: #F9FAFB; /* Latar belakang sangat terang, hampir putih */
+    --card-bg: #ffffff;
+    --border-color: #E2E8F0; /* Border lebih terang */
+    --shadow-light: rgba(0, 0, 0, 0.05); /* Bayangan lebih ringan */
+    --shadow-medium: rgba(0, 0, 0, 0.1); /* Bayangan sedang yang lebih ringan */
+    --radius-soft: 12px;
+    --spacing-xs: 8px;
+    --spacing-sm: 15px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: var(--spacing-lg) 0;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: var(--card-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-soft);
+    box-shadow: 0 var(--spacing-xs) var(--spacing-lg) var(--shadow-light);
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.2em;
+    color: var(--primary-color);
+    text-align: left;
+    font-weight: 700;
+}
+
+.header p {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-dark);
+}
+
+.header p strong {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.header .btn-link {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.header .btn-link:hover {
+    color: var(--primary-color);
+}
+
+h1, h2, h3, h4 {
+    text-align: center;
+    color: var(--text-dark);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+}
+
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.4em; }
+
+form {
+    margin-top: var(--spacing-lg);
+    background-color: var(--card-bg);
+    padding: var(--spacing-lg) var(--spacing-md);
+    border-radius: var(--radius-soft);
+    box-shadow: 0 4px 15px var(--shadow-light);
+}
+
+label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.95em;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-soft);
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3); /* Ring fokus lebih cerah */
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--radius-soft);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3); /* Bayangan tombol lebih cerah */
+}
+
+.btn:hover {
+    background-color: #4C8EDD; /* Slightly darker primary */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(96, 165, 250, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(96, 165, 250, 0.2);
+    background-color: #3B7DC4;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    box-shadow: 0 4px 8px rgba(52, 211, 153, 0.3);
+}
+
+.btn-secondary:hover {
+    background-color: #2CB382; /* Slightly darker secondary */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 211, 153, 0.4);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(52, 211, 153, 0.2);
+    background-color: #249A6E;
+}
+
+.flash-message {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--radius-soft);
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9em;
+    border: 1px solid transparent;
+}
+
+.flash-message.success {
+    background-color: #ECFDF5; /* Hijau muda cerah */
+    color: #059669; /* Teks hijau gelap */
+    border-color: #A7F3D0;
+}
+
+.flash-message.error {
+    background-color: #FEF2F2; /* Merah muda cerah */
+    color: #EF4444; /* Teks merah gelap */
+    border-color: #FCA5A5;
+}
+
+/* Tabel Responsif */
+.table-responsive {
+    overflow-x: auto;
+    margin-top: var(--spacing-md);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-md);
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 8px var(--shadow-light);
+    border-radius: var(--radius-soft);
+    overflow: hidden;
+}
+
+table thead {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+table th, table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+    font-size: 0.9em;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #F7FAFC; /* Warna latar baris genap lebih cerah */
+}
+
+table tbody tr:hover {
+    background-color: #EDF2F7; /* Efek hover pada baris tabel lebih cerah */
+}
+
+/* Activity Summary Grid */
+.activity-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.activity-summary-card {
+    background-color: var(--card-bg);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-soft);
+    box-shadow: 0 2px 8px var(--shadow-light);
+    text-align: center;
+    border-left: 5px solid var(--primary-color);
+}
+
+.activity-summary-card h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: var(--primary-color);
+}
+
+.activity-summary-card p {
+    margin: 0;
+    font-size: 0.95em;
+    color: var(--text-dark);
+}
+
+.activity-summary-card strong {
+    font-size: 1.2em;
+    color: var(--success-color); /* Warna sukses untuk penekanan total */
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) auto;
+    }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    .header h1 {
+        font-size: 1.8em;
+    }
+    .header p {
+        justify-content: flex-start;
+        width: 100%;
+    }
+    .header .btn, .header .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+    table th, table td {
+        padding: var(--spacing-xs);
+        font-size: 0.8em;
+    }
+    .activity-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: var(--spacing-sm);
+    }
+    .header h1 {
+        font-size: 1.5em;
+    }
+    form {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+    .btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.9em;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+        font-size: 0.85em;
+        padding: var(--spacing-xs);
+    }
+}
