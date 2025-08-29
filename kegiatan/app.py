@@ -12,6 +12,46 @@ app.secret_key = 'kunci_rahasia_untuk_sesi_yang_sangat_kuat_dan_unik' # Ganti de
 WIB_TIMEZONE = pytz.timezone('Asia/Jakarta')
 UTC_TIMEZONE = pytz.utc
 
+# Data kegiatan yang sudah disediakan
+ACTIVITIES = {
+    "Kelas Catur": {
+        "description": "Pelajari strategi catur dari dasar hingga mahir.",
+        "day_time": "Setiap Selasa, 16:00 - 18:00 WIB",
+        "image": "https://seputarpapua.com/wp-content/uploads/2023/11/Percasi-Mimika-Pertandingkan-Catur-Kelas-Junior-dan-Senior.webp" # Warna disesuaikan
+    },
+    "Futsal": {
+        "description": "Bergabung dalam tim futsal dan tingkatkan skill Anda.",
+        "day_time": "Setiap Rabu, 19:00 - 21:00 WIB",
+        "image": "https://jasakontraktorlapangan.id/wp-content/uploads/2023/02/Jasa-Pembuatan-Lapangan-Futsal-Serang.jpeg" # Warna disesuaikan
+    },
+    "Kelas Memasak": {
+        "description": "Eksplorasi resep-resep kuliner populer dan ciptakan hidangan lezat.",
+        "day_time": "Setiap Kamis, 14:00 - 16:00 WIB",
+        "image": "https://www.joyful-cooking.com/uploads/6/3/3/5/63359151/dscf9643_orig.jpg" # Warna disesuaikan
+    },
+    "Kelas Musik": {
+        "description": "Belajar instrumen favorit atau vokal dengan instruktur profesional.",
+        "day_time": "Setiap Jumat, 17:00 - 19:00 WIB",
+        "image": "https://interiorqu.id/wp-content/uploads/2022/10/IMG-20220702-WA0026.jpg" # Warna disesuaikan
+    },
+    "Voli": {
+        "description": "Gabung tim voli dan latih kemampuan spikes dan blocks.",
+        "day_time": "Setiap Sabtu, 10:00 - 12:00 WIB",
+        "image": "https://www.lantai-kayu.co.id/wp-content/uploads/2022/03/lapang-voli-outdoor.jpg" # Warna disesuaikan
+    },
+    "Badminton": {
+        "description": "Asah kelincahan Anda di lapangan badminton.",
+        "day_time": "Setiap Minggu, 09:00 - 11:00 WIB",
+        "image": "https://percepat.com/wp-content/uploads/2019/04/Ukuran-Lapangan-Bulu-Tangkis-1.jpg" # Warna disesuaikan
+    },
+    "Kelas Tari": {
+        "description": "Ekspresikan diri melalui berbagai genre tarian.",
+        "day_time": "Setiap Senin, 15:00 - 17:00 WIB",
+        "image": "https://galuhaprilina.wordpress.com/wp-content/uploads/2017/08/a8faf-annex-studio-e.jpg" # Warna disesuaikan
+    }
+}
+
+
 # Fungsi helper untuk mengonversi timestamp UTC dari DB ke string zona waktu lokal (WIB)
 def convert_utc_to_wib(utc_timestamp_str):
     if not utc_timestamp_str:
@@ -31,7 +71,7 @@ def convert_utc_to_wib(utc_timestamp_str):
 
 # Fungsi untuk mendapatkan koneksi ke database SQLite
 def get_db_connection():
-    conn = sqlite3.connect('event_registration.db')
+    conn = sqlite3.connect('kegiatan_registrasi.db') # NAMA DATABASE BERUBAH
     conn.row_factory = sqlite3.Row # Mengembalikan baris sebagai objek mirip dict
     return conn
 
@@ -146,7 +186,7 @@ def logout():
     flash('Anda berhasil keluar.', 'success')
     return redirect(url_for('login'))
 
-# Rute Utama/Dashboard Peserta (Menampilkan daftar peserta event)
+# Rute Utama/Dashboard Peserta (Menampilkan daftar pendaftaran kegiatan user tersebut)
 @app.route('/')
 def index():
     if not session.get('logged_in'):
@@ -154,13 +194,15 @@ def index():
         return redirect(url_for('login'))
         
     conn = get_db_connection()
-    # Mengambil semua peserta event, join dengan tabel users untuk mendapatkan detail NIM dan Jurusan
+    # Mengambil pendaftaran kegiatan khusus untuk user yang sedang login
+    user_id = session['user_id']
     participants_raw = conn.execute('''
         SELECT p.id, u.name, u.email, u.nim, u.jurusan, p.activity_type, p.registration_date
         FROM participants p
         JOIN users u ON p.user_id = u.id
+        WHERE p.user_id = ?
         ORDER BY p.registration_date DESC
-    ''').fetchall()
+    ''', (user_id,)).fetchall() # Filter berdasarkan user_id
     conn.close()
 
     participants_converted = []
@@ -171,25 +213,54 @@ def index():
     
     return render_template('index.html', participants=participants_converted)
 
-# Rute Form Pendaftaran Event (Bukan registrasi akun)
-@app.route('/register_event', methods=['GET', 'POST'])
-def register_participant():
+
+# Rute untuk melihat semua kegiatan dan mendaftar
+@app.route('/activities')
+def browse_activities():
     if not session.get('logged_in'):
-        flash('Anda harus masuk untuk mendaftar event.', 'error')
+        flash('Anda harus masuk untuk melihat kegiatan.', 'error')
         return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    # Hitung total peserta per kegiatan
+    activity_counts_raw = conn.execute('SELECT activity_type, COUNT(*) AS total FROM participants GROUP BY activity_type').fetchall()
+    activity_counts_dict = {row['activity_type']: row['total'] for row in activity_counts_raw}
+    conn.close()
+
+    # Gabungkan data ACTIVITIES dengan jumlah peserta
+    activities_with_counts = {}
+    for name, data in ACTIVITIES.items():
+        activities_with_counts[name] = {
+            **data, # Salin semua data dari ACTIVITIES
+            "participant_count": activity_counts_dict.get(name, 0) # Tambahkan jumlah peserta, default 0
+        }
+
+    return render_template('activities_browse.html', activities=activities_with_counts)
+
+
+# Rute Form Pendaftaran Kegiatan (Bukan registrasi akun)
+@app.route('/register_kegiatan', methods=['GET', 'POST']) # NAMA RUTE BERUBAH
+def register_kegiatan(): # NAMA FUNGSI BERUBAH
+    if not session.get('logged_in'):
+        flash('Anda harus masuk untuk mendaftar kegiatan.', 'error')
+        return redirect(url_for('login'))
+
+    # Ambil activity_name dari parameter URL jika GET request, atau dari form jika POST
+    activity_name_from_param = request.args.get('activity_name')
     
     if request.method == 'POST':
-        activity_type = request.form['activity_type']
+        activity_type = request.form.get('activity_type') # Ambil dari hidden input di form
+        
+        if not activity_type:
+            flash('Pilih jenis kegiatan yang valid!', 'error')
+            return redirect(url_for('browse_activities')) # Kembali ke browse jika tidak ada kegiatan
+
         user_id = session['user_id']
         name = session['user_name']
         email = session['user_email']
         nim = session['user_nim']
         jurusan = session['user_jurusan']
 
-        if not activity_type:
-            flash('Pilih jenis kegiatan!', 'error')
-            return redirect(url_for('register_participant'))
-        
         conn = get_db_connection()
         try:
             # Periksa apakah user sudah terdaftar di kegiatan ini
@@ -197,23 +268,29 @@ def register_participant():
                                         (user_id, activity_type)).fetchone()
             if existing_reg:
                 flash(f'Anda sudah terdaftar di kegiatan "{activity_type}" ini.', 'error')
-                return redirect(url_for('register_participant'))
+                return redirect(url_for('index')) # Kembali ke dashboard jika sudah terdaftar
 
             conn.execute('INSERT INTO participants (user_id, name, email, nim, jurusan, activity_type) VALUES (?, ?, ?, ?, ?, ?)',
                          (user_id, name, email, nim, jurusan, activity_type))
             conn.commit()
-            flash(f'Registrasi event "{activity_type}" berhasil!', 'success')
-            return redirect(url_for('index')) # Redirect ke dashboard utama setelah daftar event
+            flash(f'Registrasi kegiatan "{activity_type}" berhasil!', 'success')
+            return redirect(url_for('index')) # Redirect ke dashboard utama setelah daftar kegiatan
         except Exception as e:
-            flash(f'Terjadi kesalahan saat mendaftar event: {str(e)}', 'error')
-            return redirect(url_for('register_participant'))
+            flash(f'Terjadi kesalahan saat mendaftar kegiatan: {str(e)}', 'error')
+            return redirect(url_for('browse_activities')) # Kembali ke browse jika ada error
         finally:
             conn.close()
     
-    # Untuk GET request, tampilkan form pendaftaran event
-    return render_template('register_event.html')
+    # Untuk GET request (dari halaman browse_activities)
+    if activity_name_from_param and activity_name_from_param in ACTIVITIES:
+        return render_template('register_kegiatan.html', activity_name=activity_name_from_param) # NAMA TEMPLATE BERUBAH
+    else:
+        # Jika tidak ada activity_name yang valid, arahkan ke halaman browse
+        flash('Pilih kegiatan terlebih dahulu.', 'info')
+        return redirect(url_for('browse_activities'))
 
-# Rute untuk melihat daftar peserta dan total per kegiatan (sama dengan /participants_list)
+
+# Rute untuk melihat SEMUA daftar peserta dan total per kegiatan (untuk admin/public view)
 @app.route('/participants_list') 
 def list_participants():
     if not session.get('logged_in'):
@@ -221,7 +298,7 @@ def list_participants():
         return redirect(url_for('login'))
 
     conn = get_db_connection()
-    # Mengambil semua peserta event, join dengan tabel users untuk mendapatkan detail NIM dan Jurusan
+    # Mengambil semua peserta kegiatan, join dengan tabel users untuk mendapatkan detail NIM dan Jurusan
     participants_raw = conn.execute('''
         SELECT p.id, u.name, u.email, u.nim, u.jurusan, p.activity_type, p.registration_date
         FROM participants p
@@ -250,7 +327,7 @@ def admin_dashboard():
         return redirect(url_for('index'))
     
     conn = get_db_connection()
-    # Mengambil semua peserta event, join dengan tabel users untuk mendapatkan detail NIM dan Jurusan
+    # Mengambil semua peserta kegiatan, join dengan tabel users untuk mendapatkan detail NIM dan Jurusan
     all_participants_raw = conn.execute('''
         SELECT p.id, u.name, u.email, u.nim, u.jurusan, p.activity_type, p.registration_date
         FROM participants p
@@ -275,8 +352,8 @@ def admin_dashboard():
 if __name__ == '__main__':
     # Hapus database lama jika ada untuk memulai bersih (khusus development)
     # Anda bisa mengomentari ini untuk menjaga data jika ingin mempertahankan data
-    if os.path.exists('event_registration.db'):
-        os.remove('event_registration.db')
+    if os.path.exists('kegiatan_registrasi.db'): # NAMA DATABASE BERUBAH
+        os.remove('kegiatan_registrasi.db') # NAMA DATABASE BERUBAH
     
     init_db()
     

@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Peserta</title>
+    <title>Daftar Peserta & Statistik Kegiatan</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Daftar Peserta Event</h1>
-            <a href="{{ url_for('register') }}" class="btn">Daftar Akun Baru</a> {# Link ke registrasi akun #}
-            <a href="{{ url_for('register_participant') }}" class="btn btn-secondary">Daftar Event Baru</a> {# Link ke pendaftaran event #}
+            <h1>Daftar Peserta & Statistik Kegiatan</h1>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Kembali ke Dashboard</a>
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -22,7 +21,7 @@
         {% endif %}
         {% endwith %}
 
-        <h2>Total Peserta per Kegiatan</h2>
+        <h2 class="text-center">Total Peserta per Kegiatan</h2>
         {% if activity_counts %}
         <div class="activity-summary-grid">
             {% for count in activity_counts %}
@@ -36,16 +35,16 @@
         <p class="text-center">Belum ada kegiatan yang memiliki peserta.</p>
         {% endif %}
 
-        <h2>Semua Peserta Terdaftar</h2>
+        <hr>
+
+        <h2 class="text-center">Semua Peserta Terdaftar</h2>
         {% if participants %}
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>NIM</th>
+                        <th>Nama (NIM)</th>
                         <th>Jurusan</th>
                         <th>Kegiatan</th>
                         <th>Waktu Daftar (WIB)</th>
@@ -55,10 +54,8 @@
                     {% for participant in participants %}
                     <tr>
                         <td>{{ participant.id }}</td>
-                        <td>{{ participant.name }}</td>
-                        <td>{{ participant.email }}</td>
-                        <td>{{ participant.nim }}</td> {# Menambahkan NIM #}
-                        <td>{{ participant.jurusan }}</td> {# Menambahkan Jurusan #}
+                        <td>{{ participant.name }} ({{ participant.nim }})</td> {# Format Nama (NIM) #}
+                        <td>{{ participant.jurusan }}</td>
                         <td>{{ participant.activity_type }}</td>
                         <td>{{ participant.registration_date_wib }}</td>
                     </tr>

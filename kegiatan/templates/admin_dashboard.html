@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin Event</title>
+    <title>Dashboard Admin Kegiatan</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Dashboard Admin Event</h1>
+            <h1>Dashboard Admin Kegiatan</h1>
             <p>Halo, <strong>{{ session.get('user_name', 'Admin') }}</strong>! 
                 | <a href="{{ url_for('logout') }}" class="btn btn-secondary">Keluar</a>
             </p>
@@ -23,16 +23,14 @@
         {% endif %}
         {% endwith %}
 
-        <h2>Semua Pendaftar Event</h2>
+        <h2 class="text-center">Semua Pendaftar Kegiatan</h2>
         {% if all_participants %}
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>NIM</th>
+                        <th>Nama (NIM)</th>
                         <th>Jurusan</th>
                         <th>Kegiatan</th>
                         <th>Waktu Daftar (WIB)</th>
@@ -43,15 +41,13 @@
                     {% for participant in all_participants %}
                     <tr>
                         <td>{{ participant.id }}</td>
-                        <td>{{ participant.name }}</td>
-                        <td>{{ participant.email }}</td>
-                        <td>{{ participant.nim }}</td> {# Menambahkan NIM #}
-                        <td>{{ participant.jurusan }}</td> {# Menambahkan Jurusan #}
+                        <td>{{ participant.name }} ({{ participant.nim }})</td> {# Format Nama (NIM) #}
+                        <td>{{ participant.jurusan }}</td>
                         <td>{{ participant.activity_type }}</td>
                         <td>{{ participant.registration_date_wib }}</td>
                         <td>
                             <!-- Contoh aksi: hapus pendaftar -->
-                            <a href="#" onclick="alert('Fitur hapus pendaftar event belum diimplementasikan.');" class="btn-link">Hapus</a>
+                            <a href="#" onclick="alert('Fitur hapus pendaftar kegiatan belum diimplementasikan.');" class="btn-link">Hapus</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -62,6 +58,8 @@
         <p class="text-center">Belum ada peserta terdaftar.</p>
         {% endif %}
 
+        <hr>
+
         <h2>Kelola Pengguna Sistem</h2>
         {% if all_users %}
         <div class="table-responsive">
@@ -70,8 +68,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Email</th>
-                        <th>Nama</th>
-                        <th>NIM</th>
+                        <th>Nama (NIM)</th>
                         <th>Jurusan</th>
                         <th>Admin?</th>
                         <th>Aksi</th>
@@ -82,8 +79,7 @@
                     <tr>
                         <td>{{ user.id }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.nim }}</td>
+                        <td>{{ user.name }} ({{ user.nim }})</td> {# Format Nama (NIM) #}
                         <td>{{ user.jurusan }}</td>
                         <td>{% if user.is_admin %}Ya{% else %}Tidak{% endif %}</td>
                         <td>
