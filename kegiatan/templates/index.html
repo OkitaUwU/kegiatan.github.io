@@ -26,42 +26,29 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="text-center">Kegiatan yang Bisa Anda Ikuti</h2>
+        <h2 class="text-center">Pilihan Kegiatan Anda</h2>
         <p class="text-center" style="margin-bottom: var(--spacing-lg);">Jelajahi berbagai kegiatan menarik dan daftar sekarang!</p>
-        <div class="text-center">
-            <a href="{{ url_for('browse_activities') }}" class="btn">Lihat Semua Kegiatan & Daftar</a>
-        </div>
         
-        <hr>
-
-        <h2 class="text-center">Pendaftaran Kegiatan Anda</h2>
-        {% if participants %}
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama (NIM)</th>
-                        <th>Jurusan</th>
-                        <th>Kegiatan</th>
-                        <th>Waktu Daftar (WIB)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for participant in participants %}
-                    <tr>
-                        <td>{{ participant.id }}</td>
-                        <td>{{ participant.name }} ({{ participant.nim }})</td> {# Format Nama (NIM) #}
-                        <td>{{ participant.jurusan }}</td>
-                        <td>{{ participant.activity_type }}</td>
-                        <td>{{ participant.registration_date_wib }}</td>
-                    </tr>
+        {% if user_selection %}
+            <div class="flash-message info">
+                Anda telah mendaftar untuk kegiatan berikut pada <strong>{{ user_selection.submission_date_wib }}</strong>:
+                <ul>
+                    {% for activity in user_selection.selected_activities %}
+                        <li>{{ activity }}</li>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                </ul>
+                Anda tidak dapat mendaftar lagi karena Anda sudah memiliki pilihan final.
+            </div>
+            <div class="text-center">
+                 <a href="{{ url_for('browse_activities') }}" class="btn btn-secondary">Lihat Daftar Kegiatan</a>
+            </div>
         {% else %}
-        <p class="text-center">Anda belum terdaftar di kegiatan manapun.</p>
+            <div class="flash-message info">
+                Anda belum membuat pilihan kegiatan final. Silakan pilih 1-3 kegiatan yang Anda minati.
+            </div>
+            <div class="text-center">
+                <a href="{{ url_for('browse_activities') }}" class="btn">Pilih Kegiatan Sekarang!</a>
+            </div>
         {% endif %}
     </div>
 </body>

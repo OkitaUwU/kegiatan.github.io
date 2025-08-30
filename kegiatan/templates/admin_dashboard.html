@@ -23,31 +23,41 @@
         {% endif %}
         {% endwith %}
 
-        <h2 class="text-center">Semua Pendaftar Kegiatan</h2>
-        {% if all_participants %}
+        <h2 class="text-center">Semua Pilihan Final Peserta</h2>
+        {% if all_selections %}
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>ID Pilihan</th>
                         <th>Nama (NIM)</th>
+                        <th>Email</th>
                         <th>Jurusan</th>
-                        <th>Kegiatan</th>
-                        <th>Waktu Daftar (WIB)</th>
+                        <th>Pilihan Kegiatan</th>
+                        <th>Waktu Pendaftaran (WIB)</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for participant in all_participants %}
+                    {% for selection in all_selections %}
                     <tr>
-                        <td>{{ participant.id }}</td>
-                        <td>{{ participant.name }} ({{ participant.nim }})</td> {# Format Nama (NIM) #}
-                        <td>{{ participant.jurusan }}</td>
-                        <td>{{ participant.activity_type }}</td>
-                        <td>{{ participant.registration_date_wib }}</td>
+                        <td>{{ selection.id }}</td>
+                        <td>{{ selection.user_name }} ({{ selection.nim }})</td>
+                        <td>{{ selection.email }}</td>
+                        <td>{{ selection.jurusan }}</td>
                         <td>
-                            <!-- Contoh aksi: hapus pendaftar -->
-                            <a href="#" onclick="alert('Fitur hapus pendaftar kegiatan belum diimplementasikan.');" class="btn-link">Hapus</a>
+                            <ul>
+                            {% for activity in selection.selected_activities %}
+                                <li>{{ activity }}</li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ selection.submission_date_wib }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_edit_selection', selection_id=selection.id) }}" class="btn">Edit</a>
+                            <form action="{{ url_for('admin_delete_selection', selection_id=selection.id) }}" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pilihan ini? Tindakan ini tidak dapat dibatalkan.');" style="display:inline-block; margin-left: 5px;">
+                                <button type="submit" class="btn btn-secondary">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -55,7 +65,7 @@
             </table>
         </div>
         {% else %}
-        <p class="text-center">Belum ada peserta terdaftar.</p>
+        <p class="text-center">Belum ada pilihan kegiatan final dari peserta.</p>
         {% endif %}
 
         <hr>
@@ -79,12 +89,11 @@
                     <tr>
                         <td>{{ user.id }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.name }} ({{ user.nim }})</td> {# Format Nama (NIM) #}
+                        <td>{{ user.name }} ({{ user.nim }})</td>
                         <td>{{ user.jurusan }}</td>
                         <td>{% if user.is_admin %}Ya{% else %}Tidak{% endif %}</td>
                         <td>
-                            <!-- Contoh aksi: hapus pengguna (Anda bisa tambahkan fitur edit/promosikan) -->
-                            <a href="#" onclick="alert('Fitur hapus/edit pengguna belum diimplementasikan.');" class="btn-link">Aksi</a>
+                            <a href="#" onclick="alert('Fitur edit pengguna belum diimplementasikan.');" class="btn-link">Aksi</a>
                         </td>
                     </tr>
                     {% endfor %}

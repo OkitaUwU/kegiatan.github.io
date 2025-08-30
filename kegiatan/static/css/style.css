@@ -1,4 +1,4 @@
-/* static/css/style.css - Desain Modern, Lebih Terang & Kaya Fitur untuk Anak Muda */
+/* static/css/style.css - Desain Modern, Lebih Terang & Kaya Fitur untuk Anak Muda (v2) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -132,6 +132,10 @@ select {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+input[type="checkbox"] {
+    margin-right: var(--spacing-xs);
+}
+
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
@@ -205,6 +209,12 @@ select:focus {
     background-color: #FFEBEE; /* Merah muda cerah */
     color: #D32F2F; /* Teks merah gelap */
     border-color: #FFCDD2;
+}
+
+.flash-message.info {
+    background-color: #E3F2FD; /* Biru muda cerah */
+    color: #1976D2; /* Teks biru gelap */
+    border-color: #BBDEFB;
 }
 
 /* Tabel Responsif */
@@ -282,7 +292,7 @@ table tbody tr:hover {
     text-align: center;
 }
 
-/* --- Kegiatan Browse Grid (BARU) --- */
+/* --- Kegiatan Browse Grid --- */
 .activity-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -298,6 +308,11 @@ table tbody tr:hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+}
+
+.activity-card.selected {
+    border: 3px solid var(--primary-color); /* Highlight saat terpilih */
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
 .activity-card:hover {
@@ -369,6 +384,50 @@ table tbody tr:hover {
     height: 18px;
 }
 
+/* Checkbox styling */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none; /* Sembunyikan checkbox bawaan browser */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: var(--spacing-xs);
+    position: relative;
+    outline: none;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Tanda centang */
+    font-size: 14px;
+    color: var(--text-light);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-container label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal; /* Override default label bold */
+    display: inline-block;
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

@@ -37,34 +37,40 @@
 
         <hr>
 
-        <h2 class="text-center">Semua Peserta Terdaftar</h2>
-        {% if participants %}
+        <h2 class="text-center">Semua Pilihan Final Peserta</h2>
+        {% if all_selections %}
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>ID Pilihan</th>
                         <th>Nama (NIM)</th>
                         <th>Jurusan</th>
-                        <th>Kegiatan</th>
-                        <th>Waktu Daftar (WIB)</th>
+                        <th>Pilihan Kegiatan</th>
+                        <th>Waktu Pendaftaran (WIB)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for participant in participants %}
+                    {% for selection in all_selections %}
                     <tr>
-                        <td>{{ participant.id }}</td>
-                        <td>{{ participant.name }} ({{ participant.nim }})</td> {# Format Nama (NIM) #}
-                        <td>{{ participant.jurusan }}</td>
-                        <td>{{ participant.activity_type }}</td>
-                        <td>{{ participant.registration_date_wib }}</td>
+                        <td>{{ selection.id }}</td>
+                        <td>{{ selection.user_name }} ({{ selection.nim }})</td>
+                        <td>{{ selection.jurusan }}</td>
+                        <td>
+                            <ul>
+                            {% for activity in selection.selected_activities %}
+                                <li>{{ activity }}</li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ selection.submission_date_wib }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         {% else %}
-        <p class="text-center">Belum ada peserta terdaftar.</p>
+        <p class="text-center">Belum ada pilihan kegiatan final dari peserta.</p>
         {% endif %}
     </div>
 </body>
