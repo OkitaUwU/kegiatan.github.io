@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Kegiatan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Daftar Akun Kegiatan</h1>
+            <a href="{{ url_for('login1') }}" class="btn btn-secondary">Sudah Punya Akun? Login</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="post">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
+
+            <label for="name">Nama Lengkap:</label>
+            <input type="text" id="name" name="name" placeholder="Nama lengkap Anda" required>
+
+            <label for="nim">NIM (13 digit angka):</label>
+            <input type="text" id="nim" name="nim" pattern="[0-9]{13}" title="NIM harus 13 digit angka" maxlength="13" placeholder="Contoh: 1234567890123" required>
+
+            <label for="jurusan">Pilih Jurusan:</label>
+            <select id="jurusan" name="jurusan" required>
+                <option value="">-- Pilih Jurusan --</option>
+                <option value="Teknik Informatika">Teknik Informatika</option>
+                <option value="Teknik Sipil">Teknik Sipil</option>
+                <option value="Teknik Arsitektur">Teknik Arsitektur</option>
+                <option value="Teknik Pertambangan">Teknik Pertambangan</option>
+            </select>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Buat password" required>
+
+            <button type="submit" class="btn">Daftar Sekarang</button>
+        </form>
+    </div>
+</body>
+</html>
