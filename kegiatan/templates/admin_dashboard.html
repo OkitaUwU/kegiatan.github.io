@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin Kegiatan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Hanya ubah warna, jangan properti lainnya */
+        .btn-secondary {
+            background-color: #FFC107; /* Kuning */
+            color: white; /* Diubah menjadi putih */
+        }
+        .btn-secondary:hover {
+            background-color: #FFB300;
+        }
+        .btn-danger {
+            background-color: #FFC107; /* Kuning */
+            color: white; /* Diubah menjadi putih */
+        }
+        .btn-danger:hover {
+            background-color: #FFB300;
+        }
+        table thead {
+            background-color: #4CAF50; /* Hijau */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dashboard Admin Kegiatan</h1>
+            <p>Halo, <strong>{{ session.get('user_name', 'Admin') }}</strong>!
+                | <a href="{{ url_for('logout') }}" class="btn btn-secondary">Keluar</a>
+            </p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="text-center">Semua Pilihan Final Peserta</h2>
+        {% if all_selections %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Pilihan</th>
+                        <th>Nama (NIM)</th>
+                        <th>Email</th>
+                        <th>Jurusan</th>
+                        <th>Pilihan Kegiatan</th>
+                        <th>Waktu Pendaftaran (WIB)</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for selection in all_selections %}
+                    <tr>
+                        <td>{{ selection.id }}</td>
+                        <td>{{ selection.user_name }} ({{ selection.nim }})</td>
+                        <td>{{ selection.email }}</td>
+                        <td>{{ selection.jurusan }}</td>
+                        <td>
+                            <ul>
+                            {% for activity in selection.selected_activities %}
+                                <li>{{ activity }}</li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ selection.submission_date_wib }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_edit_selection', selection_id=selection.id) }}" class="btn">Edit</a>
+                            <form action="{{ url_for('admin_delete_selection', selection_id=selection.id) }}" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pilihan ini? Tindakan ini tidak dapat dibatalkan.');" style="display:inline-block; margin-left: 5px;">
+                                <button type="submit" class="btn btn-secondary">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">Belum ada pilihan kegiatan final dari peserta.</p>
+        {% endif %}
+
+        <hr>
+
+        <h2>Kelola Pengguna Sistem</h2>
+        {% if all_users %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Nama (NIM)</th>
+                        <th>Jurusan</th>
+                        <th>Admin?</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in all_users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.name }} ({{ user.nim }})</td>
+                        <td>{{ user.jurusan }}</td>
+                        <td>{% if user.is_admin %}Ya{% else %}Tidak{% endif %}</td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_user', user_id=user.id) }}" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun {{ user.name }}? Semua data kegiatannya juga akan terhapus.');">
+                                <button type="submit" class="btn btn-danger">Hapus Akun</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">Belum ada pengguna sistem.</p>
+        {% endif %}
+
+        <p class="text-center" style="margin-top: var(--spacing-lg);"><a href="{{ url_for('list_participants') }}" class="btn">Lihat Ringkasan Kegiatan</a></p>
+    </div>
+</body>
+</html>
